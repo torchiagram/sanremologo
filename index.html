@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sanremo Evoluzione Logo</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="header">
+        <img src="img/logo.png" alt="Sanremo Evoluzione Logo" class="main-logo">
+        <div class="counter-group">
+            <div id="year-display" class="year-counter">1951</div>
+            <div class="timeline-indicator"></div>
+        </div>
+    </header>
+
+    <main class="timeline-container">
+        <div class="timeline-track" id="timeline">
+            </div>
+        <div class="gradient-overlay left"></div>
+        <div class="gradient-overlay right"></div>
+    </main>
+
+    <footer class="footer">
+        <div class="search-section">
+            <div class="input-wrapper">
+                <input type="number" id="search-input" placeholder="1997" min="1951" max="2026">
+                <div class="horizontal-line"></div>
+            </div>
+            <div class="search-label">Cerca l'anno</div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
