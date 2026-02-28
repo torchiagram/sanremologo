@@ -3,9 +3,14 @@ const yearDisplay = document.getElementById('year-display');
 const searchInput = document.getElementById('search-input');
 
 const START_YEAR = 1951;
-const END_YEAR = 2026;
+const END_YEAR = new Date().getFullYear();
 
+//searchInput.max = END_YEAR;   //uncomment to automate the year limit
+
+//Timeline generation
 function initTimeline() {
+    const fragment = document.createDocumentFragment();
+    
     for (let year = START_YEAR; year <= END_YEAR; year++) {
         const item = document.createElement('div');
         item.className = 'timeline-item';
@@ -17,38 +22,47 @@ function initTimeline() {
         img.loading = "lazy";
 
         item.appendChild(img);
-        timeline.appendChild(item);
+        fragment.appendChild(item);
     }
+    
+    timeline.appendChild(fragment);
 }
 
-// Aggiorna l'anno in alto durante lo scroll
-timeline.addEventListener('scroll', () => {
-    const items = document.querySelectorAll('.timeline-item');
-    const containerCenter = timeline.scrollLeft + (window.innerWidth / 2);
+initTimeline();
 
-    items.forEach(item => {
-        const center = item.offsetLeft + (item.offsetWidth / 2);
-        if (Math.abs(containerCenter - center) < 50) {
-            yearDisplay.textContent = item.dataset.year;
+//Update while scrolling
+const observerOptions = {
+    root: timeline,
+    rootMargin: '0px -50% 0px -50%',
+    threshold: 0
+};
+
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            yearDisplay.textContent = entry.target.dataset.year;
         }
     });
+}, observerOptions);
+
+document.querySelectorAll('.timeline-item').forEach(item => {
+    observer.observe(item);
 });
 
-// Ricerca e scroll automatico
+//Research with automatic centering
 searchInput.addEventListener('input', (e) => {
     const val = e.target.value;
     if (val.length === 4) {
-        const targetYear = parseInt(val);
+        const targetYear = parseInt(val, 10);
         if (targetYear >= START_YEAR && targetYear <= END_YEAR) {
             const targetElement = document.querySelector(`[data-year="${targetYear}"]`);
             if (targetElement) {
-                timeline.scrollTo({
-                    left: targetElement.offsetLeft - (window.innerWidth / 2) + (targetElement.offsetWidth / 2),
-                    behavior: 'smooth'
+                targetElement.scrollIntoView({
+                    behavior: 'smooth',
+                    inline: 'center',
+                    block: 'nearest'
                 });
             }
         }
     }
 });
-
-initTimeline();
